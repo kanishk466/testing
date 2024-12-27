@@ -1,0 +1,20 @@
+name: Automate GitHub Activity
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  automate-repos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create a new private repository
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          repo_name="daily-repo-$(date +%F)"
+          curl -X POST -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"name": "'$repo_name'", "private": true}' \
+            https://api.github.com/user/repos
